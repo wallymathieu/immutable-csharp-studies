@@ -23,6 +23,7 @@ using Newtonsoft.Json;
 
 namespace Todos.Test
 {
+
     /// <summary>
     ///  Class for testing TodoItem
     /// </summary>
@@ -46,16 +47,21 @@ namespace Todos.Test
             // Cleanup when everything is done.
         }
 
-        /// <summary>
-        /// Test an instance of TodoItem
-        /// </summary>
         [Fact]
-        public void TodoItemInstanceTest()
+        public void Deserialize_json()
         {
-            // TODO uncomment below to test "IsInstanceOfType" TodoItem
-            //Assert.IsInstanceOfType<TodoItem> (instance, "variable 'instance' is a TodoItem");
+            var json = @"{""id"":1,""text"":""text""}";
+            var res=JsonConvert.DeserializeObject<TodoItem>(json, TestHelpers.SerializerSettings);
+            Assert.Equal(1, res.Id);
+            Assert.Equal("text", res.Text);
         }
-
+        [Fact]
+        public void Serialize_json()
+        {
+            var json = @"{""id"":1.0,""text"":""Text""}";
+            var res = JsonConvert.SerializeObject(new TodoItem(text:"Text",id:1), TestHelpers.SerializerSettings);
+            Assert.Equal(json, res);
+        }
 
         /// <summary>
         /// Test the property 'Id'
