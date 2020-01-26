@@ -1,0 +1,204 @@
+{
+  "openapi" : "3.0.0",
+  "info" : {
+    "title" : "Todo MVC backend style API",
+    "description" : "This is a simple API",
+    "contact" : {
+      "email" : "you@your-company.com"
+    },
+    "license" : {
+      "name" : "Apache 2.0",
+      "url" : "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version" : "1.0.0"
+  },
+  "servers" : [ {
+    "url" : "https://virtserver.swaggerhub.com/wallymathieu/todos/1.0.0",
+    "description" : "SwaggerHub API Auto Mocking"
+  } ],
+  "tags" : [ {
+    "name" : "todos",
+    "description" : "Regular API calls"
+  } ],
+  "paths" : {
+    "/api/todos" : {
+      "get" : {
+        "tags" : [ "todos" ],
+        "summary" : "searches inventory",
+        "description" : "By passing in the appropriate options, you can search for\navailable inventory in the system\n",
+        "operationId" : "searchInventory",
+        "parameters" : [ {
+          "name" : "q",
+          "in" : "query",
+          "description" : "pass an optional search string for looking up todos",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "skip",
+          "in" : "query",
+          "description" : "number of records to skip for pagination",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "minimum" : 0,
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "limit",
+          "in" : "query",
+          "description" : "maximum number of records to return",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "maximum" : 50,
+            "minimum" : 0,
+            "type" : "integer",
+            "format" : "int32"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "search results matching criteria",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/TodoItem"
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "bad input parameter"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "todos" ],
+        "summary" : "adds a todo item",
+        "description" : "Adds a todo to the system",
+        "operationId" : "addTodo",
+        "requestBody" : {
+          "description" : "Inventory todo to add",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UpdateTodoItem"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "description" : "todo created"
+          },
+          "400" : {
+            "description" : "invalid input, object invalid"
+          },
+          "409" : {
+            "description" : "an existing todo already exists"
+          }
+        }
+      }
+    },
+    "/api/todos/{id}" : {
+      "put" : {
+        "tags" : [ "todos" ],
+        "summary" : "update a todo item",
+        "description" : "Update a todo to the system",
+        "operationId" : "updateTodo",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "The todo item id",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "number"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "Inventory todo to update",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UpdateTodoItem"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "todo updated"
+          },
+          "400" : {
+            "description" : "invalid input, object invalid"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "todos" ],
+        "summary" : "delete a todo item",
+        "description" : "delete a todo from the system",
+        "operationId" : "deleteTodo",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "The todo item id",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "number"
+          }
+        } ],
+        "responses" : {
+          "202" : {
+            "description" : "todo removed"
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "TodoItem" : {
+        "required" : [ "id", "text" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "number",
+            "example" : 1,
+            "readOnly": true
+          },
+          "text" : {
+            "type" : "string",
+            "example" : "Add redux",
+            "readOnly": true
+          }
+        }
+      },
+      "UpdateTodoItem" : {
+        "required" : [ "text" ],
+        "type" : "object",
+        "properties" : {
+          "text" : {
+            "type" : "string",
+            "example" : "My very important things",
+            "readOnly": true
+          }
+        }
+      }
+    }
+  }
+}
