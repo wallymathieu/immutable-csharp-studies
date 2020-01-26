@@ -1,0 +1,197 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "This is a simple TODO API",
+    "version" : "1.0.0",
+    "title" : "Simple Todo API",
+    "contact" : {
+      "email" : "you@your-company.com"
+    },
+    "license" : {
+      "name" : "Apache 2.0",
+      "url" : "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "host" : "virtserver.swaggerhub.com",
+  "basePath" : "/wallymathieu/todomvc2/1.0.0",
+  "tags" : [ {
+    "name" : "admins",
+    "description" : "Secured Admin-only calls"
+  }, {
+    "name" : "developers",
+    "description" : "Operations available to regular developers"
+  } ],
+  "schemes" : [ "https" ],
+  "paths" : {
+    "/api/todos/" : {
+      "get" : {
+        "tags" : [ "developers" ],
+        "summary" : "searches Todos",
+        "description" : "By passing in the appropriate options, you can search for\navailable todos in the system\n",
+        "operationId" : "searchTodos",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "searchString",
+          "in" : "query",
+          "description" : "pass an optional search string for looking up todos",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "skip",
+          "in" : "query",
+          "description" : "number of records to skip for pagination",
+          "required" : false,
+          "type" : "integer",
+          "minimum" : 0,
+          "format" : "int32"
+        }, {
+          "name" : "limit",
+          "in" : "query",
+          "description" : "maximum number of records to return",
+          "required" : false,
+          "type" : "integer",
+          "maximum" : 50,
+          "minimum" : 0,
+          "format" : "int32"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "search results matching criteria",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/TodoItem"
+              }
+            }
+          },
+          "400" : {
+            "description" : "bad input parameter"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "admins" ],
+        "summary" : "adds an Todo item",
+        "description" : "Adds an item to the system",
+        "operationId" : "addTodo",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "todoItem",
+          "description" : "Todo item to add",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/UpdateTodoItem"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "item created"
+          },
+          "400" : {
+            "description" : "invalid input, object invalid"
+          },
+          "409" : {
+            "description" : "an existing item already exists"
+          }
+        }
+      }
+    },
+    "/api/todos/{id}" : {
+      "get" : {
+        "operationId" : "getTodo",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Todo item id",
+          "required" : true,
+          "type" : "number"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "item found",
+            "schema" : {
+              "$ref" : "#/definitions/TodoItem"
+            }
+          },
+          "404" : {
+            "description" : "item not found"
+          }
+        }
+      },
+      "put" : {
+        "operationId" : "updateTodo",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Todo item id",
+          "required" : true,
+          "type" : "number"
+        }, {
+          "in" : "body",
+          "name" : "todoItem",
+          "description" : "Todo item to update",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/UpdateTodoItem"
+          }
+        } ],
+        "responses" : {
+          "202" : {
+            "description" : "item updated"
+          },
+          "404" : {
+            "description" : "item not found"
+          }
+        }
+      },
+      "delete" : {
+        "operationId" : "deleteTodo",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Todo item id",
+          "required" : true,
+          "type" : "number"
+        } ],
+        "responses" : {
+          "202" : {
+            "description" : "todo removed"
+          },
+          "404" : {
+            "description" : "item not found"
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "TodoItem" : {
+      "type" : "object",
+      "required" : [ "id", "text" ],
+      "properties" : {
+        "id" : {
+          "type" : "number",
+          "example" : 1.0,
+          "readOnly": true
+
+        },
+        "text" : {
+          "type" : "string",
+          "example" : "Widget Adapter",
+          "readOnly": true
+        }
+      }
+    },
+    "UpdateTodoItem" : {
+      "required" : [ "text" ],
+      "properties" : {
+        "text" : {
+          "type" : "string",
+          "example" : "Widget Adapter"
+        }
+      }
+    }
+  }
+}
